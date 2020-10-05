@@ -1,4 +1,5 @@
 import React from "react";
+import ListDelete from "./ListDelete";
 class AddDeleteClassComponent extends React.Component {
     state = {
         inputValue: "",
@@ -6,6 +7,7 @@ class AddDeleteClassComponent extends React.Component {
         mobile: "",
         lists: []
     }
+    id= 0
     handleChange = (event) => {
         this.setState({ inputValue: event.target.value })
 
@@ -17,19 +19,20 @@ class AddDeleteClassComponent extends React.Component {
         this.setState({ mobile: event.target.value })
     }
     addInputValue = () => {
-        this.setState({
+         this.setState({
             lists: [...this.state.lists,
             {
+                id: this.id + 1,
                 name: this.state.name,
                 mobile: this.state.mobile
             }]
-        })
-    }
-    deleteInputValue(id) {
-        this.setState(this.state.lists.splice(id, 1));
-
+        });
+        this.id = this.id+1;
     }
 
+    deleteInputValue = (id) => {
+        this.setState({ lists: this.state.lists.filter(list => list.id !== id) });
+    }
     render() {
         return (
             <div>
@@ -46,14 +49,11 @@ class AddDeleteClassComponent extends React.Component {
                 </label>
                 <button onClick={this.addInputValue}>ADD</button>
                 <div>
-                    {this.state.lists.map((list, id) => (
-                        <ul>
-                            <li key={id}>
-                                {list.name}
-                                {list.mobile}
-                                <button onClick={() => this.deleteInputValue(id)}>DELETE</button>
-                            </li>
-                        </ul>
+                    {this.state.lists.map((list) => (
+                        <ListDelete
+                            key={list.id}
+                            list={list}
+                            deleteInputValue = {this.deleteInputValue} />
                     )
                     )
                     }
